@@ -5,10 +5,9 @@
 
     <data>
         <variable
-            name="commentViewModel"
-            type="com.framgia.englishconversation.data.model.Comment"
+            name="viewModel"
+            type="com.framgia.englishconversation.screen.comment.CommentAdapter.MediaViewModel"
             />
-
     </data>
 
     <android.support.v7.widget.CardView
@@ -24,17 +23,24 @@
             <include
                 layout="@layout/item_comment"
                 android:id="@+id/layout_user"
-                app:commentViewModel="@{commentViewModel}"
                 />
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_200"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginStart="@dimen/dp_8"
+                android:background="@color/color_black"
                 app:controller_layout_id="@layout/custom_video_playback_controller"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_user"
-                app:resize_mode="fixed_width"
+                app:resize_mode="fit"
+                app:player="@{viewModel.exoPlayer}"
                 />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

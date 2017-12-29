@@ -19,8 +19,9 @@ public class TimelineRepository {
         mDataSource.createNewPost(timelineModel, callback);
     }
 
-    public void getTimeline(TimelineRemoteDataSource.TimelineCallback callback){
-        mDataSource.getTimeline(callback);
+    public void getTimeline(TimelineRemoteDataSource.TimelineCallback callback,
+            TimelineModel timelineModel) {
+        mDataSource.getTimeline(callback, timelineModel);
     }
 
     public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {

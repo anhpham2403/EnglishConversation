@@ -1,15 +1,28 @@
 package com.framgia.englishconversation.screen.comment;
 
+import android.content.Context;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.framgia.englishconversation.BR;
 import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.model.MediaModel;
 import com.framgia.englishconversation.databinding.ItemCommentAudioBinding;
 import com.framgia.englishconversation.databinding.ItemCommentImageBinding;
 import com.framgia.englishconversation.databinding.ItemCommentOnlyTextBinding;
 import com.framgia.englishconversation.databinding.ItemCommentVideoBinding;
+import com.framgia.englishconversation.utils.Constant;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import java.util.List;
 
 /**
@@ -54,11 +67,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.BaseComm
                         ItemCommentAudioBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
                 return new AudioViewHolder(audioBinding);
+
             case MediaModel.MediaType.VIDEO:
                 ItemCommentVideoBinding videoBinding =
                         ItemCommentVideoBinding.inflate(LayoutInflater.from(parent.getContext()),
                                 parent, false);
                 return new VideoViewHolder(videoBinding);
+
             case MediaModel.MediaType.IMAGE:
                 ItemCommentImageBinding imageBinding =
                         ItemCommentImageBinding.inflate(LayoutInflater.from(parent.getContext()),
@@ -77,6 +92,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.BaseComm
     @Override
     public int getItemCount() {
         return mComments != null ? mComments.size() : 0;
+    }
+
+    public Comment getLastComment() {
+        return mComments != null && !mComments.isEmpty() ? mComments.get(mComments.size() - 1)
+                : null;
     }
 
     /**
@@ -110,7 +130,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.BaseComm
 
         @Override
         public void bindData(Comment model) {
-            mBinding.setCommentViewModel(model);
+            mBinding.setViewModel(new MediaViewModel(model, mBinding.getRoot().getContext()));
             mBinding.executePendingBindings();
         }
     }
@@ -146,8 +166,59 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.BaseComm
 
         @Override
         public void bindData(Comment model) {
-            mBinding.setCommentViewModel(model);
+            mBinding.setViewModel(new MediaViewModel(model, mBinding.getRoot().getContext()));
             mBinding.executePendingBindings();
+        }
+    }
+
+    public class MediaViewModel extends BaseObservable {
+        private Comment mComment;
+        private SimpleExoPlayer mExoPlayer;
+
+        public MediaViewModel(Comment comment, Context context) {
+            mComment = comment;
+            init(context);
+        }
+
+        @Bindable
+        public Comment getComment() {
+            return mComment;
+        }
+
+        public void setComment(Comment comment) {
+            mComment = comment;
+            notifyPropertyChanged(BR.comment);
+        }
+
+        @Bindable
+        public SimpleExoPlayer getExoPlayer() {
+            return mExoPlayer;
+        }
+
+        public void setExoPlayer(SimpleExoPlayer exoPlayer) {
+            mExoPlayer = exoPlayer;
+            notifyPropertyChanged(BR.exoPlayer);
+        }
+
+        public void init(Context context) {
+            final SimpleExoPlayer player =
+                    ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector());
+            setExoPlayer(player);
+            Uri uri = Uri.parse(mComment.getMediaModel().getUrl());
+            DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            DefaultHttpDataSourceFactory dataSourceFactory =
+                    new DefaultHttpDataSourceFactory(Constant.USER_AGENT);
+            final ExtractorMediaSource mediaSource =
+                    new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+            player.addListener(new Player.DefaultEventListener() {
+                @Override
+                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                    super.onPlayerStateChanged(playWhenReady, playbackState);
+                    if (playbackState == Player.STATE_IDLE) {
+                        player.prepare(mediaSource, true, false);
+                    }
+                }
+            });
         }
     }
 

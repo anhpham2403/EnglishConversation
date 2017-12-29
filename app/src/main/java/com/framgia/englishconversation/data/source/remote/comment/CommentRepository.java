@@ -21,8 +21,8 @@ public class CommentRepository implements CommentDataSource {
     }
 
     @Override
-    public void getComment(CommentCallback callback) {
-        mDataSource.getComment(callback);
+    public void getComment(CommentCallback callback, Comment lastComment) {
+        mDataSource.getComment(callback, lastComment);
     }
 
     public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {

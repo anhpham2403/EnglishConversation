@@ -28,6 +28,6 @@ interface TimelineContract {
      * Presenter.
      */
     interface Presenter extends BasePresenter {
-        void fetchTimelineData();
+        void fetchTimelineData(TimelineModel timelineModel);
     }
 }

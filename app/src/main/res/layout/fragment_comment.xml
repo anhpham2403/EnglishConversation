@@ -18,6 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
         app:layoutManager="LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:recyclerAdapter="@{viewModel.adapter}"
+        app:scrollListener="@{viewModel.onEndScrollListener}"
         />
-
 </layout>
