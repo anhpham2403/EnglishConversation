@@ -5,7 +5,6 @@ import com.framgia.englishconversation.data.model.Comment;
 import com.framgia.englishconversation.data.source.callback.DataCallback;
 import com.framgia.englishconversation.data.source.remote.BaseFirebaseDataBase;
 import com.framgia.englishconversation.utils.Constant;
-import com.framgia.englishconversation.utils.OnEndScrollListener;
 import com.framgia.englishconversation.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,17 +21,10 @@ import java.util.List;
  */
 
 public class CommentRemoteDataSource extends BaseFirebaseDataBase implements CommentDataSource {
-    private long mCurrentLastCommentCreatedDate;
-    private String mCurrentLastCommentId;
     private static final int NUM_OF_COMMENT_PER_PAGE = 10;
-    private OnEndScrollListener mOnEndScrollListener;
 
     public CommentRemoteDataSource() {
         super(Constant.DatabaseTree.COMMENT);
-    }
-
-    public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {
-        mOnEndScrollListener = onEndScrollListener;
     }
 
     @Override
@@ -74,12 +66,10 @@ public class CommentRemoteDataSource extends BaseFirebaseDataBase implements Com
                     }
                 }
                 callback.onChildAdded(comments, false);
-                mOnEndScrollListener.setIsFetchingData(false);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                mOnEndScrollListener.setIsFetchingData(false);
             }
         });
     }

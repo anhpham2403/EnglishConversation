@@ -15,7 +15,7 @@ import com.framgia.englishconversation.databinding.FragmentCommentBinding;
 /**
  * Comment Screen.
  */
-public class CommentFragment extends BaseFragment {
+public class CommentFragment extends BaseFragment implements OnScrollListener {
 
     private CommentContract.ViewModel mViewModel;
 
@@ -52,5 +52,10 @@ public class CommentFragment extends BaseFragment {
     public void onStop() {
         mViewModel.onStop();
         super.onStop();
+    }
+
+    @Override
+    public void onScrollListener() {
+        mViewModel.onEndScrolled();
     }
 }

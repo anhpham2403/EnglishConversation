@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -215,5 +216,10 @@ public final class BindingUtils {
     public static void setScrollListener(RecyclerView recyclerView,
             RecyclerView.OnScrollListener onScrollListener) {
         recyclerView.addOnScrollListener(onScrollListener);
+    }
+    @BindingAdapter({ "scrollListener" })
+    public static void setScrollListener(NestedScrollView nestedScrollView,
+            NestedScrollView.OnScrollChangeListener onScrollListener) {
+        nestedScrollView.setOnScrollChangeListener(onScrollListener);
     }
 }

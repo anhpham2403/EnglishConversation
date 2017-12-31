@@ -20,7 +20,7 @@ interface CommentContract {
 
         void onChildAdded(List<Comment> comment);
 
-        OnEndScrollListener getOnEndScrollListener();
+        void onEndScrolled();
     }
 
     /**

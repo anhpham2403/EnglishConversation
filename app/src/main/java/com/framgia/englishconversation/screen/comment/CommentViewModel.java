@@ -13,18 +13,15 @@ import java.util.List;
  * Exposes the data to be used in the Comment screen.
  */
 
-public class CommentViewModel extends BaseObservable
-        implements CommentContract.ViewModel, OnEndScrollListener.OnEndScroll {
+public class CommentViewModel extends BaseObservable implements CommentContract.ViewModel {
 
     private CommentContract.Presenter mPresenter;
     private CommentAdapter mAdapter;
     private Context mContext;
-    private OnEndScrollListener mOnEndScrollListener;
 
     public CommentViewModel(Context context) {
         mAdapter = new CommentAdapter(new ArrayList<Comment>());
         mContext = context;
-        mOnEndScrollListener = new OnEndScrollListener(this);
     }
 
     @Override
@@ -40,15 +37,6 @@ public class CommentViewModel extends BaseObservable
     @Override
     public void onChildAdded(List<Comment> comment) {
         mAdapter.updateData(comment);
-    }
-
-    @Override
-    public OnEndScrollListener getOnEndScrollListener() {
-        return mOnEndScrollListener;
-    }
-
-    public void setOnEndScrollListener(OnEndScrollListener onEndScrollListener) {
-        mOnEndScrollListener = onEndScrollListener;
     }
 
     @Override

@@ -17,7 +17,6 @@ final class CommentPresenter
     CommentPresenter(CommentContract.ViewModel viewModel, CommentRepository commentRepository) {
         mViewModel = viewModel;
         mRepository = commentRepository;
-        mRepository.setOnEndScrollListener(mViewModel.getOnEndScrollListener());
         mRepository.getComment(this, null);
     }
 
